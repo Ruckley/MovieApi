@@ -9,7 +9,6 @@ import java.util.List;
 interface MovieTestRepo {
     public void createTable() throws SQLException;
     public void dropTable() throws SQLException;
-
     public void insertAwards(List<Award> award) throws SQLException;
 }
 class MovieMySqlTestRepo implements MovieTestRepo{
@@ -48,7 +47,6 @@ class MovieMySqlTestRepo implements MovieTestRepo{
         // Remove the trailing comma
         sqlBuilder.setLength(sqlBuilder.length() - 1);
         Statement stmt = connection.createStatement();
-        System.out.println("SQL: " + sqlBuilder.toString());
         stmt.executeUpdate(sqlBuilder.toString());
     }
 

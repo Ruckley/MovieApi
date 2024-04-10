@@ -8,9 +8,8 @@ import reactor.core.publisher.Mono;
 
 import java.util.Map;
 
-@CrossOrigin(origins = "*")
 @RestController
-@RequestMapping("/movieApi")
+@RequestMapping("/movie_api")
 public class Controller {
     @Autowired
     AwardsService movieService;
@@ -23,6 +22,7 @@ public class Controller {
     public Mono<ResponseEntity<String>> wonBestPicture(@RequestParam(required = false, name = "t") String title) {
 
         Mono<String> result = movieService.bestPictureWinner(title);
+
         return result.map(ResponseEntity::ok)
                 .onErrorResume(this::handleError);
     }

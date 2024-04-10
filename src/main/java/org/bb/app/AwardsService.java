@@ -1,7 +1,6 @@
 package org.bb.app;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import org.bb.db.DbConnectionProvider;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Mono;
@@ -16,15 +15,20 @@ public class AwardsService {
     @Autowired
     AwardsRepository movieRepository;
 
-    private static final Logger LOGGER = Logger.getLogger(DbConnectionProvider.class.getName());
+    private static final Logger LOGGER = Logger.getLogger(AwardsService.class.getName());
     private static final ObjectMapper mapper = new ObjectMapper();
 
     public Mono<String> bestPictureWinner(String title) {
+        //based on OMDb API
+        String noResultResponseJson = """
+                {"Response":"False","Error":"Movie not found!"}
+                """;
         return findAwardByMovieTitle(title)
                 .flatMap(award -> {
                     ObjectNode jsonNode = createBestPictureWinnerJson(award);
                     return createBestPictureWinnerJsonString(jsonNode, award);
-                });
+                })
+                .switchIfEmpty(Mono.just(noResultResponseJson));
     }
 
     public Mono<Award> findAwardByMovieTitle(String title) {
