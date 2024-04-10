@@ -3,13 +3,15 @@ package org.bb.app;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.relational.core.mapping.Table;
 
+import java.util.Objects;
+
 @Table("awards")
 public class Award {
     @Id
     private int id;
     private String category;
     private String nominee;
-    private String additional_info;
+    private String additional_info; //!!
     private boolean won;
     private int year;
 
@@ -42,6 +44,19 @@ public class Award {
 
     public int getYear() {
         return year;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Award award = (Award) o;
+        return won == award.won && year == award.year && Objects.equals(category, award.category) && Objects.equals(nominee, award.nominee) && Objects.equals(additional_info, award.additional_info);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(category, nominee, additional_info, won, year);
     }
 
     @Override
