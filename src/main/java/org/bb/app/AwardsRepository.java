@@ -9,5 +9,6 @@ import reactor.core.publisher.Mono;
 
 @Repository
 public interface AwardsRepository extends ReactiveCrudRepository<Award, Integer> {
-    Mono<Award> findFirstByCategoryAndNomineeContaining(@Param("category") String category, @Param("nominee")String nominee);
+    Mono<Award> findFirstByCategoryAndNomineeContaining(@Param("category") String category, @Param("nominee") String nominee);
+
 }
