@@ -102,7 +102,9 @@ public class MoviesService {
     private Mono<String> createGetTop10Json(List<Movie> movies) {
         mapper.enable(SerializationFeature.INDENT_OUTPUT);
         try{
-            return Mono.just(mapper.writeValueAsString(movies));
+            // This should be done properly in jackson
+            String jsonString = String.format("{ \"topTen\" : %s }", mapper.writeValueAsString(movies));
+            return Mono.just(jsonString);
         } catch (JsonProcessingException e) {
             LOGGER.log(Level.SEVERE, "Unable to create Json string from movies list: ", e);
             return Mono.error(e);

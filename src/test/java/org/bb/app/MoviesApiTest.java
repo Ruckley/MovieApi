@@ -9,6 +9,7 @@ import org.springframework.test.web.reactive.server.WebTestClient;
 import org.testcontainers.containers.MySQLContainer;
 
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 
@@ -84,6 +85,8 @@ public class MoviesApiTest {
     private final String BASE_API = "movie_api";
     private final String BEST_PICTURE_WINNER_REQUEST = BASE_API + "/best_picture_winner";
     private final String RATE_MOVIE_REQUEST = BASE_API + "/rate_movie";
+    private final String TOP_TEN_REQUEST = BASE_API + "/top_rated";
+
 
 
     private void bestPictureWinnerTestHelper(String title, String expectedTitle, String expectedResult){
@@ -187,6 +190,56 @@ public class MoviesApiTest {
         }
 
        assertEquals(testRepo.getMovies(), List.of(dupMovie1990, dupMovie1952));
+    }
+
+    // This should be tested properly but I am out of time
+    @Test
+    void top10Test() throws SQLException {
+
+        // Ordered by rating desc
+        Movie movie1 = new Movie(12, "The Lord of the Rings: The Return of the King", 2003, 1400, 9.7f);
+        Movie movie2 = new Movie(11, "The Lord of the Rings: The Fellowship of the Ring", 2001, 1500, 9.5f);
+        Movie movie3 = new Movie(4, "The Godfather", 1972, 900, 9.1f);
+        Movie movie4 = new Movie(13, "The Lord of the Rings: The Two Towers", 2002, 1300, 9.2f);
+        Movie movie5 = new Movie(8, "Forrest Gump", 1994, 1100, 9.0f);
+        Movie movie6 = new Movie(5, "The Dark Knight", 2008, 1200, 8.9f);
+        Movie movie7 = new Movie(6, "Schindlers List", 1993, 800, 8.6f);
+        Movie movie8 = new Movie(9, "Inception", 2010, 1000, 8.7f);
+        Movie movie9 = new Movie(14, "The Silence of the Lambs", 1991, 850, 8.7f);
+        Movie movie10 = new Movie(2, "The Shawshank Redemption", 1994, 500, 8.2f);
+        Movie movie11 = new Movie(10, "The Matrix", 1999, 950, 8.4f);
+        Movie movie12 = new Movie(15, "Goodfellas", 1990, 750, 7.9f);
+        Movie movie13 = new Movie(7, "Fight Club", 1999, 600, 7.8f);
+        Movie movie14 = new Movie(3, "Pulp Fiction", 1994, 700, 7.5f);
+        Movie movie15 = new Movie(16, "Se7en", 1995, 720, 7.4f);
+
+        List<Movie> movies = new ArrayList<>();
+
+        movies.add(movie1);
+        movies.add(movie2);
+        movies.add(movie3);
+        movies.add(movie4);
+        movies.add(movie5);
+        movies.add(movie6);
+        movies.add(movie7);
+        movies.add(movie8);
+        movies.add(movie9);
+        movies.add(movie10);
+        movies.add(movie11);
+        movies.add(movie12);
+        movies.add(movie13);
+        movies.add(movie14);
+        movies.add(movie15);
+
+
+        testRepo.insertMovies(movies);
+
+        webTestClient.get().uri(TOP_TEN_REQUEST)
+                .exchange()
+                .expectStatus()
+                .isOk()
+                .expectBody().json(MoviesApiTestHelper.top10Json);
+
     }
 
 
