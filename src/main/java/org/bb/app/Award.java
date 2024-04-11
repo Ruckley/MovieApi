@@ -13,11 +13,13 @@ public class Award {
     private String category;
     private String nominee;
     @Column("additional_info")
-    private String additionalInfo; //!!
-    private boolean won;
+    private String additionalInfo;
+    // Use Boolean over boolean to account for Null values in data
+    private Boolean won;
     private int year;
 
-    public Award(String category, String nominee, String additionalInfo, boolean won, int year) {
+    public Award() {}
+    public Award(String category, String nominee, String additionalInfo, Boolean won, int year) {
         this.category = category;
         this.nominee = nominee;
         this.additionalInfo = additionalInfo;
@@ -26,7 +28,7 @@ public class Award {
     }
 
     //For spring
-    public Award() {}
+
 
     public String getCategory() {
         return category;
@@ -40,7 +42,7 @@ public class Award {
         return additionalInfo;
     }
 
-    public boolean isWon() {
+    public Boolean isWon() {
         return won;
     }
 
