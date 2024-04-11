@@ -1,0 +1,2 @@
+CREATE TABLE IF NOT EXISTS awards (id INT AUTO_INCREMENT PRIMARY KEY, year_string VARCHAR(20), category VARCHAR(255), nominee TEXT,additional_info TEXT,won BOOLEAN);
+CREATE TABLE IF NOT EXISTS movies (id INT AUTO_INCREMENT PRIMARY KEY, title VARCHAR(20), num_ratings INT, av_rating FLOAT);

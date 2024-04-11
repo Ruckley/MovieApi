@@ -42,7 +42,7 @@ class MovieMySqlTestRepo implements MovieTestRepo{
         StringBuilder sqlBuilder = new StringBuilder("INSERT INTO awards (category, nominee, additional_info, won, year) VALUES ");
         for (Award award : awards) {
             sqlBuilder.append(String.format("('%s', '%s', '%s', %s, %d),",
-                    award.getCategory(), award.getNominee(), award.getAdditional_info(), award.isWon() ? 1 : 0, award.getYear()));
+                    award.getCategory(), award.getNominee(), award.getAdditionalInfo(), award.isWon() ? 1 : 0, award.getYear()));
         }
         // Remove the trailing comma
         sqlBuilder.setLength(sqlBuilder.length() - 1);

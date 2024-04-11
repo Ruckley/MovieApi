@@ -1,6 +1,7 @@
 package org.bb.app;
 
 import org.springframework.data.annotation.Id;
+import org.springframework.data.relational.core.mapping.Column;
 import org.springframework.data.relational.core.mapping.Table;
 
 import java.util.Objects;
@@ -11,14 +12,15 @@ public class Award {
     private int id;
     private String category;
     private String nominee;
-    private String additional_info; //!!
+    @Column("additional_info")
+    private String additionalInfo; //!!
     private boolean won;
     private int year;
 
-    public Award(String category, String nominee, String additional_info, boolean won, int year) {
+    public Award(String category, String nominee, String additionalInfo, boolean won, int year) {
         this.category = category;
         this.nominee = nominee;
-        this.additional_info = additional_info;
+        this.additionalInfo = additionalInfo;
         this.won = won;
         this.year = year;
     }
@@ -34,8 +36,8 @@ public class Award {
         return nominee;
     }
 
-    public String getAdditional_info() {
-        return additional_info;
+    public String getAdditionalInfo() {
+        return additionalInfo;
     }
 
     public boolean isWon() {
@@ -51,12 +53,12 @@ public class Award {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Award award = (Award) o;
-        return won == award.won && year == award.year && Objects.equals(category, award.category) && Objects.equals(nominee, award.nominee) && Objects.equals(additional_info, award.additional_info);
+        return won == award.won && year == award.year && Objects.equals(category, award.category) && Objects.equals(nominee, award.nominee) && Objects.equals(additionalInfo, award.additionalInfo);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(category, nominee, additional_info, won, year);
+        return Objects.hash(category, nominee, additionalInfo, won, year);
     }
 
     @Override
@@ -64,7 +66,7 @@ public class Award {
         return "Award{" +
                 "category='" + category + '\'' +
                 ", nominee='" + nominee + '\'' +
-                ", additional_info='" + additional_info + '\'' +
+                ", additional_info='" + additionalInfo + '\'' +
                 ", won=" + won +
                 ", year=" + year +
                 '}';
