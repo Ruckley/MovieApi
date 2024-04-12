@@ -1,4 +1,4 @@
-package org.bb.app;
+package org.bb.container;
 
 import org.testcontainers.containers.MySQLContainer;
 

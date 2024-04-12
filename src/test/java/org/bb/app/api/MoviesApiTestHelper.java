@@ -1,4 +1,4 @@
-package org.bb.app;
+package org.bb.app.api;
 
 public class MoviesApiTestHelper {
 

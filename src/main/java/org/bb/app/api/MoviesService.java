@@ -1,7 +1,11 @@
-package org.bb.app;
+package org.bb.app.api;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.SerializationFeature;
+import org.bb.app.db.AwardsRepository;
+import org.bb.app.db.MoviesRepository;
+import org.bb.app.model.Award;
+import org.bb.app.model.Movie;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Mono;

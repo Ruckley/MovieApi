@@ -1,32 +1,25 @@
-package org.bb.app;
+package org.bb.db;
 
+import org.bb.app.model.Award;
+import org.bb.app.model.Movie;
 import org.testcontainers.containers.MySQLContainer;
 
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
-//Create an interface so we can easily test with other DBs if needed in the future
-interface MovieTestRepo {
-    public void createAwardsTable() throws SQLException;
 
-    public void createMoviesTable() throws SQLException;
 
-    public void dropAllTables() throws SQLException;
-
-    public void insertAwards(List<Award> award) throws SQLException;
-
-    public void insertMovies(List<Movie> movie) throws SQLException;
-
-    public List<Movie> getMovies() throws SQLException;
-}
-
-class MovieMySqlTestRepo implements MovieTestRepo {
+public class MovieMySqlTestRepo implements MovieTestRepo {
 
     private final Connection connection;
 
-    public MovieMySqlTestRepo(MySQLContainer<?> mysqlContainer) throws SQLException {
-        this.connection = DriverManager.getConnection(mysqlContainer.getJdbcUrl(), mysqlContainer.getUsername(), mysqlContainer.getPassword());
+    public MovieMySqlTestRepo(MySQLContainer<?> mysqlContainer) {
+        try {
+            this.connection = DriverManager.getConnection(mysqlContainer.getJdbcUrl(), mysqlContainer.getUsername(), mysqlContainer.getPassword());
+        } catch (SQLException e) {
+            throw new IllegalStateException("Failed to initialize testRepo", e);
+        }
     }
 
     public void createAwardsTable() throws SQLException {

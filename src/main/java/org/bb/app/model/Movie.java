@@ -1,4 +1,4 @@
-package org.bb.app;
+package org.bb.app.model;
 
 import org.springframework.data.annotation.Id;
 import org.springframework.data.relational.core.mapping.Column;

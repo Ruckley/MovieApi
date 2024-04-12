@@ -1,9 +1,9 @@
-package org.bb.app;
+package org.bb.app.db;
 
 
+import org.bb.app.model.Award;
 import org.springframework.data.r2dbc.repository.R2dbcRepository;
 import org.springframework.data.repository.query.Param;
-import org.springframework.data.repository.reactive.ReactiveCrudRepository;
 import org.springframework.stereotype.Repository;
 
 import reactor.core.publisher.Mono;

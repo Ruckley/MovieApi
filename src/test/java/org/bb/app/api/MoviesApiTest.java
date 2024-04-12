@@ -1,7 +1,13 @@
-package org.bb.app;
+package org.bb.app.api;
 
+import org.bb.app.model.Award;
+import org.bb.app.model.Movie;
+import org.bb.container.BasicMySqlContainer;
+import org.bb.db.MovieMySqlTestRepo;
+import org.bb.db.MovieTestRepo;
 import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.DynamicPropertyRegistry;
 import org.springframework.test.context.DynamicPropertySource;
@@ -10,28 +16,16 @@ import org.testcontainers.containers.MySQLContainer;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.Comparator;
 import java.util.List;
 
-import static org.junit.Assert.assertTrue;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-//@Import(TestContainerConfig.class)
 public class MoviesApiTest {
 
 
     private static final MySQLContainer<BasicMySqlContainer> mysqlContainer = BasicMySqlContainer.getRunningInstance();
-    private static final MovieTestRepo testRepo;
-
-    static {
-        try {
-            testRepo = new MovieMySqlTestRepo(mysqlContainer);
-        } catch (SQLException e) {
-            throw new IllegalStateException("Failed to initialize testRepo", e);
-        }
-    }
-
+    private static final MovieTestRepo testRepo = new MovieMySqlTestRepo(mysqlContainer);
 
     @Autowired
     private WebTestClient webTestClient;
@@ -87,10 +81,13 @@ public class MoviesApiTest {
     private final String RATE_MOVIE_REQUEST = BASE_API + "/rate_movie";
     private final String TOP_TEN_REQUEST = BASE_API + "/top_rated";
 
+    //token value should be set in config file
+    private final String API_KEY = "&apikey=" + "myToken";
+
 
 
     private void bestPictureWinnerTestHelper(String title, String expectedTitle, String expectedResult){
-        webTestClient.get().uri(BEST_PICTURE_WINNER_REQUEST + "?t=" + title)
+        webTestClient.get().uri(BEST_PICTURE_WINNER_REQUEST + "?t=" + title + API_KEY)
                 .exchange()
                 .expectStatus()
                 .isOk()
@@ -116,7 +113,7 @@ public class MoviesApiTest {
     void bestPictureWinnerNoMatchingResult() {
 
         // Movie title is in nominee column but the award is not Best Picture
-        webTestClient.get().uri(BEST_PICTURE_WINNER_REQUEST + "?t=" + notBPAward.getNominee())
+        webTestClient.get().uri(BEST_PICTURE_WINNER_REQUEST + "?t=" + notBPAward.getNominee() + API_KEY)
                 .exchange()
                 .expectStatus()
                 .isOk()
@@ -125,7 +122,7 @@ public class MoviesApiTest {
                 .jsonPath("$.Error").isEqualTo("Movie not found!");
 
         // Movie title is not in table
-        webTestClient.get().uri(BEST_PICTURE_WINNER_REQUEST + "?t=xxxxxxxxx")
+        webTestClient.get().uri(BEST_PICTURE_WINNER_REQUEST + "?t=xxxxxxxxx" + API_KEY)
                 .exchange()
                 .expectStatus()
                 .isOk()
@@ -136,7 +133,7 @@ public class MoviesApiTest {
 
 
     private void rateMovieTestHelper(String title, int rating, String expectedTitle, float expectedRating, int expectedNumRatings){
-        webTestClient.post().uri(RATE_MOVIE_REQUEST + "?t=" + title + "&r=" + rating)
+        webTestClient.post().uri(RATE_MOVIE_REQUEST + "?t=" + title + "&r=" + rating + API_KEY)
                 .exchange()
                 .expectStatus()
                 .isOk()
@@ -172,7 +169,7 @@ public class MoviesApiTest {
         Movie dupMovie1952 = new Movie(2,"Moulin Rouge", 1952, 2, 6f);
         testRepo.insertMovies(List.of(dupMovie1990, dupMovie1952));
 
-        webTestClient.post().uri(RATE_MOVIE_REQUEST + "?t=" + "Moulin Rouge" + "&y=" + 1952 + "&r=" + 5)
+        webTestClient.post().uri(RATE_MOVIE_REQUEST + "?t=" + "Moulin Rouge" + "&y=" + 1952 + "&r=" + 5 + API_KEY)
                 .exchange()
                 .expectStatus()
                 .isOk()
@@ -234,7 +231,7 @@ public class MoviesApiTest {
 
         testRepo.insertMovies(movies);
 
-        webTestClient.get().uri(TOP_TEN_REQUEST)
+        webTestClient.get().uri(TOP_TEN_REQUEST + "?apikey=myToken")
                 .exchange()
                 .expectStatus()
                 .isOk()
