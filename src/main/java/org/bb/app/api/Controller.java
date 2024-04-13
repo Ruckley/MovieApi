@@ -16,9 +16,16 @@ public class Controller {
         return Mono.just(ResponseEntity.ok().build());
     }
     @GetMapping("/best_picture_winner")
-    public Mono<ResponseEntity<String>> wonBestPicture(@RequestParam(required = true, name = "t") String title) {
-
-        Mono<String> result = movieService.bestPictureWinner(title);
+    public Mono<ResponseEntity<String>> wonBestPicture(
+            @RequestParam(required = true, name = "t") String title,
+            @RequestParam(required = false, name = "y") Integer year
+    ) {
+        Mono<String> result;
+        if (year != null) {
+            result = movieService.bestPictureWinner(title, year);
+        } else {
+            result = movieService.bestPictureWinner(title);
+        }
 
         return result.map(ResponseEntity::ok)
                 .onErrorResume(this::handleError);
@@ -27,15 +34,14 @@ public class Controller {
     @PostMapping("/rate_movie")
     public Mono<ResponseEntity<String>> rateMovie(
             @RequestParam(required = true, name = "t") String title,
-            @RequestParam(required = false, name = "y") String year,
+            @RequestParam(required = false, name = "y") Integer year,
             @RequestParam(required = true, name = "r") int rating) {
         if (rating < 0 || rating > 10) {
             return Mono.just(ResponseEntity.badRequest().body("Rating must be between 0 and 10"));
         }
         Mono<String> result;
-        if (year != null && !year.isEmpty()) {
-            int yearInt = Integer.parseInt(year);
-            result = movieService.updateRating(title, yearInt, rating);
+        if (year != null) {
+            result = movieService.updateRating(title, year, rating);
         } else {
             result = movieService.updateRating(title, rating);
         }

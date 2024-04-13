@@ -45,9 +45,25 @@ public class MoviesService {
                 .switchIfEmpty(Mono.just(NO_RESULT_RESPONSE_JSON));
     }
 
+    public Mono<String> bestPictureWinner(String title, int year) {
+        //based on OMDb API
+
+        return findAwardByMovieTitleAndYear(title, year)
+                .flatMap(award -> {
+                    ObjectNode jsonNode = createBestPictureWinnerJson(award);
+                    return createBestPictureWinnerJsonString(jsonNode, award);
+                })
+                .switchIfEmpty(Mono.just(NO_RESULT_RESPONSE_JSON));
+    }
+
     public Mono<Award> findAwardByMovieTitle(String title) {
         //Movie title is only included in "Best Picture" entries
         return awardsRepository.findFirstByCategoryAndNomineeContaining("Best Picture", title);
+    }
+
+    public Mono<Award> findAwardByMovieTitleAndYear(String title, int year) {
+        //Movie title is only included in "Best Picture" entries
+        return awardsRepository.findFirstByCategoryAndYearAndNomineeContaining("Best Picture", year, title);
     }
 
     public Mono<String> updateRating(String title, int rating) {
@@ -91,6 +107,7 @@ public class MoviesService {
         String won = award.isWon() != null ? (award.isWon() ? "true" : "false") : "unknown";
         ObjectNode rootJsonNode = mapper.createObjectNode();
         rootJsonNode.put("title", award.getNominee());
+        rootJsonNode.put("year", award.getYear());
         rootJsonNode.put("won_best_picture", won);
         return rootJsonNode;
     }
@@ -98,6 +115,7 @@ public class MoviesService {
     private ObjectNode createUpdateRatingJson(Movie movie) {
         ObjectNode rootJsonNode = mapper.createObjectNode();
         rootJsonNode.put("title", movie.getTitle());
+        rootJsonNode.put("year", movie.getYear());
         rootJsonNode.put("rating", movie.getAvRating());
         rootJsonNode.put("numRatings", movie.getNumRatings());
         return rootJsonNode;

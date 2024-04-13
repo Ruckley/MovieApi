@@ -9,6 +9,8 @@ If you dont want to install docker desktop make sure your docker engine is start
 
 Edit the Makefile in the MovieApi project to set your mysql user and password. Then run<br>
 ```make all```<br>
+you may have to enter your password
+
 The Makefile will:<br>
 1. start mysql
 2. put your username and password in a file so they arnt printed to the console

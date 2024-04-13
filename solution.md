@@ -5,9 +5,11 @@ This API exposes 4 routes under movie_api. Al routes need to include an apitoken
 ## API Overview
 
 ### health_check 
+GET<br>
 A simple healthcheck route that returns ok 
 
 ### best_picture_winner
+GET<br>
 Takes a movie title and an optional year parameter.
 Returns a json indicating if that movie won best picture and in what year.
 
@@ -17,6 +19,7 @@ if no year is given the first [MoviesService.java](src%2Fmain%2Fjava%2Forg%2Fbb%
 example usage: http://localhost:8080/movie_api/best_picture_winner?t=Moulin+Rouge&y=1952&apikey=myToken
 
 ### rate_movie
+POST<br>
 Takes a movie title and rating with an optional year parameter.<br>
 Updates the movie database with the new rating and returns a json with the updates rating.<br>
 Title must be exact.<br>
@@ -27,7 +30,7 @@ If year is not given first entry in db is used (this should be corrected)
 example usage: http://localhost:8080/movie_api/rate_movie?t=Moulin+Rouge&y=1952&r=9&apikey=myToken
 
 ### top_rated
-
+GET<br>
 Takes no parameters.<br>
 Returns a json of the top 10 rated movies ordered by year. I chose to order by year as no box office data was given in the task csv.<br>
 

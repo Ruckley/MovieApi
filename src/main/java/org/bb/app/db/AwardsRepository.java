@@ -11,5 +11,8 @@ import reactor.core.publisher.Mono;
 @Repository
 public interface AwardsRepository extends R2dbcRepository<Award, Integer> {
     Mono<Award> findFirstByCategoryAndNomineeContaining(@Param("category") String category, @Param("nominee") String nominee);
+
+    Mono<Award> findFirstByCategoryAndYearAndNomineeContaining(@Param("category") String category, @Param("year") int year, @Param("nominee") String nominee);
+
 }
 
