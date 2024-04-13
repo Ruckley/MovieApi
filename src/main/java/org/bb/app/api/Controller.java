@@ -11,7 +11,7 @@ public class Controller {
     @Autowired
     private MoviesService movieService;
 
-    @GetMapping("/healthCheck")
+    @GetMapping("/health_check")
     public Mono<ResponseEntity<String>> healthCheck() {
         return Mono.just(ResponseEntity.ok().build());
     }
